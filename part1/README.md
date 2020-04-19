@@ -12,8 +12,8 @@ secretD = 21
 ```
 
 ### How to run code
-Under `part1` directory, run the following:
+Under `part1/src` directory, run the following:
 ```
-javac src/Client.java
-java src/Client.java
+javac Client.java
+java Client
 ```
