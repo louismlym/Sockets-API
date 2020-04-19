@@ -12,8 +12,8 @@ secretD = 21
 ```
 
 ### How to run code
-Under `part1/src` directory, run the following:
+Under `sockets-api` directory, run the following:
 ```
-javac Client.java
-java Client
+javac part1/Client.java
+java part1/Client
 ```

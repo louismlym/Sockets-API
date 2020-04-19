@@ -1,3 +1,5 @@
+package part1;
+
 import java.nio.ByteBuffer;
 
 public class B2ServerPayload extends Payload {
