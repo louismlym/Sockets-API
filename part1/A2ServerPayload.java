@@ -22,8 +22,8 @@ public class A2ServerPayload extends Payload {
         buffer.putInt(udpPort);
         buffer.putInt(secretA);
 
-        payload = buffer.array();
-        payloadLen = buffer.position();
+        this.payload = buffer.array();
+        this.payloadLen = buffer.position();
     }
 
     public A2ServerPayload(ByteBuffer buffer, int payloadLen) {

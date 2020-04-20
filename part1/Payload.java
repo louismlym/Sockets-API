@@ -19,7 +19,9 @@ public abstract class Payload {
     }
 
     /**
-     * Initialize header from @code{buffer}
+     * Initialize header from @code{buffer}. Every subclasses that implements
+     * a constructor with @code{buffer} and @{payloadLen} as paremeters must
+     * call super(buffer, payloadLen)
      *
      * @param buffer the ByteBuffer that contains payload's content.
      *               It requires that buffer.position() is at the
@@ -29,9 +31,14 @@ public abstract class Payload {
     public Payload(ByteBuffer buffer, int payloadLen) {
         this.payloadLen = payloadLen;
         this.payload = new byte[payloadLen];
+
+        // save payload as array of bytes
         int curPosition = buffer.position();
         buffer.get(this.payload, 0, this.payloadLen);
         buffer.position(curPosition);
+
+        // buildPayload will make sure that each field is initialized
+        // into this Payload
         buildPayload(buffer);
     }
 

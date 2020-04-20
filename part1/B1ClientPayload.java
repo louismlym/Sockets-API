@@ -8,16 +8,16 @@ public class B1ClientPayload extends Payload {
     public byte[] zeros;
 
     public B1ClientPayload(int packetId, int len) {
-        this.payloadLen = len + 4;
         this.packetId = packetId;
         this.zeros = new byte[len];
 
-        ByteBuffer buffer = ByteBuffer.allocate(payloadLen);
+        ByteBuffer buffer = ByteBuffer.allocate(len + 4);
         buffer.order(ByteOrder.BIG_ENDIAN);
         buffer.putInt(packetId);
         buffer.put(this.zeros);
 
-        payload = buffer.array();
+        this.payloadLen = buffer.position();
+        this.payload = buffer.array();
     }
 
     public B1ClientPayload(ByteBuffer buffer, int payloadLen) {
@@ -26,7 +26,7 @@ public class B1ClientPayload extends Payload {
 
     @Override
     protected void buildPayload(ByteBuffer buffer) {
-        this.packetId = buffer.getInt();
+        packetId = buffer.getInt();
         zeros = new byte[payloadLen - 4];
         buffer.get(zeros, 0, payloadLen - 4);
     }
@@ -35,7 +35,7 @@ public class B1ClientPayload extends Payload {
     public String toString() {
         return "B1ClientPayload{" +
                 "packetId=" + packetId +
-                "zeros.length=" + zeros.length +
+                ", zeros.length=" + zeros.length +
                 '}';
     }
 }

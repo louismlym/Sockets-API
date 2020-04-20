@@ -28,13 +28,10 @@ public class Client {
         Packet packetA1 = new Packet(headerA1, payloadA1);
 
         // part a1: sends a single UDP packet containing the string "hello world"
-        //printPacket("Sending", packetA1);
         client.sendPacket(packetA1);
 
         // part a2: receives a UDP packet from the server containing num, len, udp_port, secretA
-        Packet packetA2 = client.receivePacket(new PayloadFactory.A2ServerPayloadFactory());
-        //printPacket("Receiving", packetA2);
-
+        Packet packetA2 = client.receivePacket(Header.SIZE + 16, new PayloadFactory.A2ServerPayloadFactory());
         client.close();
         return packetA2;
     }
@@ -55,15 +52,14 @@ public class Client {
 
             while (true) {
                 Packet receivedPacket;
-                //printPacket("Sending", packetB1);
                 client.sendPacket(packetB1);
                 try {
-                    receivedPacket = client.receivePacket(
-                            new PayloadFactory.B1ServerPayloadFactory(), 500);
+                    receivedPacket = client.receivePacket(Header.SIZE + 4,
+                            500,
+                            new PayloadFactory.B1ServerPayloadFactory());
                 } catch (SocketTimeoutException ex) {
                     continue;
                 }
-                //printPacket("Receiving", receivedPacket);
 
                 B1ServerPayload receivedPayload = (B1ServerPayload) receivedPacket.getPayload();
                 if (receivedPayload.ackedPacketId == packetId) {
@@ -73,9 +69,7 @@ public class Client {
         }
 
         // part b2: receives a UDP packet containing two integers: tcp_port, secretB
-        Packet packetB2 = client.receivePacket(new PayloadFactory.B2ServerPayloadFactory());
-        //printPacket("Receiving", packetB2);
-
+        Packet packetB2 = client.receivePacket(Header.SIZE + 8, new PayloadFactory.B2ServerPayloadFactory());
         client.close();
         return packetB2;
     }
@@ -83,8 +77,7 @@ public class Client {
     private static Packet partC(Packet packetB, TCPClient client) throws IOException {
         System.out.println("=======================Part C=======================");
         // part c2: receives a packet from the TCP server.
-        Packet packetC2 = client.receivePacket(new PayloadFactory.C2ServerPayloadFactory());
-        //printPacket("Receiving", packetC2);
+        Packet packetC2 = client.receivePacket(Header.SIZE + 16, new PayloadFactory.C2ServerPayloadFactory());
 
         return packetC2;
     }
@@ -99,13 +92,11 @@ public class Client {
             Payload payloadD1 = new D1ClientPayload(payloadC2.c, payloadC2.len2);
             Header headerD1 = new Header(payloadD1.getLength(), payloadC2.secretC, (short) 1, (short) 736);
             Packet packetD1 = new Packet(headerD1, payloadD1);
-            
-            //printPacket("Sending", packetD1);
+
             client.sendPacket(packetD1);
         }
 
-        Packet receivedPacket = client.receivePacket(new PayloadFactory.D2ServerPayloadFactory());
-        //printPacket("Receiving", receivedPacket);
+        Packet receivedPacket = client.receivePacket(Header.SIZE + 4, new PayloadFactory.D2ServerPayloadFactory());
         client.close();
         return receivedPacket;
     }
@@ -117,15 +108,5 @@ public class Client {
         System.out.println("B: " + packetB.toString());
         System.out.println("C: " + packetC.toString());
         System.out.println("D: " + packetD.toString());
-    }
-
-    private static void printPacket(String action, Packet packet) {
-        if (action.equals("Sending")) {
-            System.out.print("--> ");
-        } else if (action.equals("Receiving")) {
-            System.out.print("<-- ");
-        }
-        System.out.println(action + " a packet...");
-        System.out.println("      " + packet.toString());
     }
 }

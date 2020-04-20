@@ -22,8 +22,8 @@ public class D1ClientPayload extends Payload {
 
     @Override
     protected void buildPayload(ByteBuffer buffer) {
-        this.len2 = payloadLen;
-        this.c = payload[0];
+        len2 = payloadLen;
+        c = payload[0];
         buffer.position(buffer.position() + payloadLen);
     }
 

@@ -14,18 +14,18 @@ public class A1ClientPayload extends Payload {
     public A1ClientPayload(String str) {
         this.str = str;
 
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        ByteBuffer buffer = ByteBuffer.allocate(str.length() + 1);
         buffer.order(ByteOrder.BIG_ENDIAN);
         buffer.put((str + '\0').getBytes(StandardCharsets.US_ASCII));
 
-        payloadLen = buffer.position();
-        payload = buffer.array();
+        this.payloadLen = buffer.position();
+        this.payload = buffer.array();
     }
 
     @Override
     protected void buildPayload(ByteBuffer buffer) {
         byte[] bytes = new byte[this.payloadLen];
-        this.str = new String(bytes, StandardCharsets.US_ASCII);
+        str = new String(bytes, StandardCharsets.US_ASCII);
     }
 
     @Override
