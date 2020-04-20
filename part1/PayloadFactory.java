@@ -13,6 +13,13 @@ import java.nio.ByteBuffer;
 public abstract class PayloadFactory {
     public abstract Payload createPayload(ByteBuffer buffer, int payloadLen);
 
+    public static class A1ClientPayloadFactory extends PayloadFactory {
+        @Override
+        public Payload createPayload(ByteBuffer buffer, int payloadLen) {
+            return new A1ClientPayload(buffer, payloadLen);
+        }
+    }
+
     public static class A2ServerPayloadFactory extends PayloadFactory {
         @Override
         public Payload createPayload(ByteBuffer buffer, int payloadLen) {
