@@ -11,10 +11,10 @@ public class Header {
     // size of header in bytes
     public static final int SIZE = 12;
 
-    private int payloadLen;
-    private int pSecret;
-    private short step;
-    private short studentId;
+    public int payloadLen;
+    public int pSecret;
+    public short step;
+    public short studentId;
 
     /**
      * Initialize fields to create a header

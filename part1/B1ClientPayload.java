@@ -25,10 +25,15 @@ public class B1ClientPayload extends Payload {
     }
 
     @Override
-    protected void buildPayload(ByteBuffer buffer) {
+    protected void buildPayload(ByteBuffer buffer) throws IllegalStateException {
         packetId = buffer.getInt();
         zeros = new byte[payloadLen - 4];
         buffer.get(zeros, 0, payloadLen - 4);
+        for (byte zero : zeros) {
+            if (zero != (byte) 0) {
+                throw new IllegalStateException("byte in payload wasn't set to 0");
+            }
+        }
     }
 
     @Override

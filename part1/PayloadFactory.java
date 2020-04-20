@@ -11,46 +11,53 @@ import java.nio.ByteBuffer;
  * as static inner classes inside the PayloadFactory.
  */
 public abstract class PayloadFactory {
-    public abstract Payload createPayload(ByteBuffer buffer, int payloadLen);
+    public abstract Payload createPayload(ByteBuffer buffer, int payloadLen) throws IllegalStateException;
 
     public static class A1ClientPayloadFactory extends PayloadFactory {
         @Override
-        public Payload createPayload(ByteBuffer buffer, int payloadLen) {
+        public Payload createPayload(ByteBuffer buffer, int payloadLen) throws IllegalStateException {
             return new A1ClientPayload(buffer, payloadLen);
         }
     }
 
     public static class A2ServerPayloadFactory extends PayloadFactory {
         @Override
-        public Payload createPayload(ByteBuffer buffer, int payloadLen) {
+        public Payload createPayload(ByteBuffer buffer, int payloadLen) throws IllegalStateException {
             return new A2ServerPayload(buffer, payloadLen);
+        }
+    }
+
+    public static class B1ClientPayloadFactory extends PayloadFactory {
+        @Override
+        public Payload createPayload(ByteBuffer buffer, int payloadLen) throws IllegalStateException {
+            return new B1ClientPayload(buffer, payloadLen);
         }
     }
 
     public static class B1ServerPayloadFactory extends PayloadFactory {
         @Override
-        public Payload createPayload(ByteBuffer buffer, int payloadLen) {
+        public Payload createPayload(ByteBuffer buffer, int payloadLen) throws IllegalStateException {
             return new B1ServerPayload(buffer, payloadLen);
         }
     }
 
     public static class B2ServerPayloadFactory extends PayloadFactory {
         @Override
-        public Payload createPayload(ByteBuffer buffer, int payloadLen) {
+        public Payload createPayload(ByteBuffer buffer, int payloadLen) throws IllegalStateException {
             return new B2ServerPayload(buffer, payloadLen);
         }
     }
 
     public static class C2ServerPayloadFactory extends PayloadFactory {
         @Override
-        public Payload createPayload(ByteBuffer buffer, int payloadLen) {
+        public Payload createPayload(ByteBuffer buffer, int payloadLen) throws IllegalStateException {
             return new C2ServerPayload(buffer, payloadLen);
         }
     }
 
     public static class D2ServerPayloadFactory extends PayloadFactory {
         @Override
-        public Payload createPayload(ByteBuffer buffer, int payloadLen) {
+        public Payload createPayload(ByteBuffer buffer, int payloadLen) throws IllegalStateException {
             return new D2ServerPayload(buffer, payloadLen);
         }
     }

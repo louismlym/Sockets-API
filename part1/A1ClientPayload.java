@@ -5,9 +5,10 @@ import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 
 public class A1ClientPayload extends Payload {
+    private static final String EXPECTED_STR = "hello world";
     public String str;
 
-    public A1ClientPayload(ByteBuffer buffer, int payloadLen) {
+    public A1ClientPayload(ByteBuffer buffer, int payloadLen) throws IllegalStateException {
         super(buffer, payloadLen);
     }
 
@@ -23,9 +24,19 @@ public class A1ClientPayload extends Payload {
     }
 
     @Override
-    protected void buildPayload(ByteBuffer buffer) {
-        byte[] bytes = new byte[this.payloadLen];
+    protected void buildPayload(ByteBuffer buffer) throws IllegalStateException {
+        if (this.payloadLen != EXPECTED_STR.length() + 1) {
+            throw new IllegalStateException("The client didn't send correct string.");
+        }
+        byte[] bytes = new byte[this.payloadLen - 1];
+        // neglect the null-terminal character
+        buffer.get(bytes, 0, this.payloadLen - 1);
         str = new String(bytes, StandardCharsets.US_ASCII);
+
+        if (!str.equals(EXPECTED_STR)) {
+            throw new IllegalStateException("The client sent \"" + str
+                    + "\" instead of \"" + EXPECTED_STR + "\"");
+        }
     }
 
     @Override

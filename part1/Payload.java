@@ -27,8 +27,9 @@ public abstract class Payload {
      *               It requires that buffer.position() is at the
      *               beginning of payload content.
      * @param payloadLen the length of this payload in bytes.
+     * @throws IllegalStateException
      */
-    public Payload(ByteBuffer buffer, int payloadLen) {
+    public Payload(ByteBuffer buffer, int payloadLen) throws IllegalStateException {
         this.payloadLen = payloadLen;
         this.payload = new byte[payloadLen];
 
