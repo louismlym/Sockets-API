@@ -20,10 +20,15 @@ public class UDPServer {
     }
 
     Packet receivePacket(PayloadFactory payloadFactory) throws IOException, IllegalStateException {
-        DatagramPacket datagramPacket = receive(0);
+        return receivePacket(payloadFactory, 0);
+    }
+
+    Packet receivePacket(PayloadFactory payloadFactory, int timeout) throws IOException, IllegalStateException {
+        DatagramPacket datagramPacket = receive(timeout);
         Packet packet = new Packet(datagramPacket, payloadFactory);
-        System.out.println("<-- Received a packet...");
-        System.out.println("      " + packet);
+        System.out.println("[" + Thread.currentThread().getName() + "] <-- Received a packet from "
+                + packet.getAddress() + " (" + packet.getPort() + ")...\n"
+                + "      " + packet);
         return packet;
     }
 
@@ -40,8 +45,9 @@ public class UDPServer {
     }
 
     public void sendPacket(Packet packet, InetAddress address, int port) throws IOException {
-        System.out.println("--> Sending a packet...");
-        System.out.println("      " + packet);
+        System.out.println("[" + Thread.currentThread().getName() + "] --> Sending a packet to "
+                + address + " (" + port + ")...\n"
+                + "      " + packet);
         send(new DatagramPacket(packet.asBytes(),
                 packet.getLength(),
                 address,

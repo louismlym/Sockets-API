@@ -20,7 +20,7 @@ public class C2ServerPayload extends Payload {
         buffer.putInt(num2);
         buffer.putInt(len2);
         buffer.putInt(secretC);
-        buffer.putInt(c);
+        buffer.put(c);
 
         this.payload = buffer.array();
         this.payloadLen = buffer.position();

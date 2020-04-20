@@ -55,6 +55,13 @@ public abstract class PayloadFactory {
         }
     }
 
+    public static class D1ClientPayloadFactory extends PayloadFactory {
+        @Override
+        public Payload createPayload(ByteBuffer buffer, int payloadLen) throws IllegalStateException {
+            return new D1ClientPayload(buffer, payloadLen);
+        }
+    }
+
     public static class D2ServerPayloadFactory extends PayloadFactory {
         @Override
         public Payload createPayload(ByteBuffer buffer, int payloadLen) throws IllegalStateException {

@@ -5,13 +5,16 @@ import java.net.SocketTimeoutException;
 
 public class Client {
 
+    private static final String HOSTNAME = "attu2.cs.washington.edu";
+    private static final String LOCALHOST = "localhost";
+
     public static void main(String[] args) throws IOException {
         Packet packetA = partA();
         Packet packetB = partB(packetA);
 
         // part c1: opens a TCP connection to the server
         B2ServerPayload payloadB2 = (B2ServerPayload) packetB.getPayload();
-        TCPClient client = new TCPClient("attu2.cs.washington.edu", payloadB2.tcpPort);
+        TCPClient client = new TCPClient(HOSTNAME, payloadB2.tcpPort);
 
         Packet packetC = partC(packetB, client);
         Packet packetD = partD(packetC, client);
@@ -21,7 +24,7 @@ public class Client {
 
     private static Packet partA() throws IOException {
         System.out.println("=======================Part A=======================");
-        UDPClient client = new UDPClient("attu2.cs.washington.edu", 12235);
+        UDPClient client = new UDPClient(HOSTNAME, 12235);
 
         Payload payloadA1 = new A1ClientPayload("hello world");
         Header headerA1 = new Header(payloadA1.getLength(), 0, (short) 1, (short) 736);
@@ -39,7 +42,7 @@ public class Client {
     private static Packet partB(Packet packetA) throws IOException {
         System.out.println("=======================Part B=======================");
         A2ServerPayload payloadA2 = (A2ServerPayload) packetA.getPayload();
-        UDPClient client = new UDPClient("attu2.cs.washington.edu", payloadA2.udpPort);
+        UDPClient client = new UDPClient(HOSTNAME, payloadA2.udpPort);
 
         // part b1: send payloadA2.num packets which each packet's payload contains packet_id
         //          and payload of length payloadA2.len (all set to 0).

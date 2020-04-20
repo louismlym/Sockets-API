@@ -64,7 +64,7 @@ public class Packet {
      */
     public Packet(byte[] bytes, int offset, int length, PayloadFactory payloadFactory) throws IllegalStateException {
         if (length % 4 != 0) {
-            throw new IllegalStateException("Packet is not in 4-byte aligned");
+            throw new IllegalStateException("the packet is not 4-byte aligned");
         }
         ByteBuffer buffer = ByteBuffer.wrap(bytes, offset, length);
         buffer.order(ByteOrder.BIG_ENDIAN);

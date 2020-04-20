@@ -26,7 +26,7 @@ public class A1ClientPayload extends Payload {
     @Override
     protected void buildPayload(ByteBuffer buffer) throws IllegalStateException {
         if (this.payloadLen != EXPECTED_STR.length() + 1) {
-            throw new IllegalStateException("The client didn't send correct string.");
+            throw new IllegalStateException("the client didn't send correct string for stage a1.");
         }
         byte[] bytes = new byte[this.payloadLen - 1];
         // neglect the null-terminal character
@@ -34,7 +34,7 @@ public class A1ClientPayload extends Payload {
         str = new String(bytes, StandardCharsets.US_ASCII);
 
         if (!str.equals(EXPECTED_STR)) {
-            throw new IllegalStateException("The client sent \"" + str
+            throw new IllegalStateException("the client sent \"" + str
                     + "\" instead of \"" + EXPECTED_STR + "\"");
         }
     }

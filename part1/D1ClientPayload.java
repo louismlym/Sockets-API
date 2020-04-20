@@ -25,6 +25,12 @@ public class D1ClientPayload extends Payload {
         len2 = payloadLen;
         c = payload[0];
         buffer.position(buffer.position() + payloadLen);
+
+        for (int i = 1; i < payloadLen; i++) {
+            if (payload[i] != payload[i - 1]) {
+                throw new IllegalStateException("bytes in payload were not equal");
+            }
+        }
     }
 
     @Override
