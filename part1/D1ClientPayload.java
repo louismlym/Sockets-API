@@ -16,8 +16,16 @@ public class D1ClientPayload extends Payload {
         Arrays.fill(this.payload, c);
     }
 
+    public D1ClientPayload(ByteBuffer buffer, int payloadLen) {
+        super(buffer, payloadLen);
+    }
+
     @Override
-    protected void buildPayload(ByteBuffer buffer) { }
+    protected void buildPayload(ByteBuffer buffer) {
+        this.len2 = payloadLen;
+        this.c = payload[0];
+        buffer.position(buffer.position() + payloadLen);
+    }
 
     @Override
     public String toString() {

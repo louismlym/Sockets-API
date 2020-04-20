@@ -28,6 +28,10 @@ public abstract class Payload {
      */
     public Payload(ByteBuffer buffer, int payloadLen) {
         this.payloadLen = payloadLen;
+        this.payload = new byte[payloadLen];
+        int curPosition = buffer.position();
+        buffer.get(this.payload, 0, this.payloadLen);
+        buffer.position(curPosition);
         buildPayload(buffer);
     }
 

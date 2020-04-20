@@ -19,8 +19,9 @@ public class UDPClient extends AbstractClient {
     }
 
     @Override
-    public void sendPacket(byte[] packet, int length) throws IOException {
-        DatagramPacket datagramPacket = new DatagramPacket(packet, length, address, port);
+    public void sendBytes(byte[] bytes, int length) throws IOException {
+        System.out.printf("[DEBUG] Sending %d bytes\n", length);
+        DatagramPacket datagramPacket = new DatagramPacket(bytes, length, address, port);
         socket.send(datagramPacket);
     }
 

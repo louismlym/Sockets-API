@@ -75,9 +75,9 @@ public class Packet {
 
     @Override
     public String toString() {
-        return "Packet{" +
-                "header=" + header.toString() +
-                ", payload=" + payload.toString() +
+        return "Packet{\n" +
+                "  header=" + header.toString() + ",\n" +
+                "  payload=" + payload.toString() + "\n" +
                 '}';
     }
 }

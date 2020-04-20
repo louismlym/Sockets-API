@@ -1,6 +1,7 @@
 package part1;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 public class A2ServerPayload extends Payload {
     public int num;
@@ -15,13 +16,14 @@ public class A2ServerPayload extends Payload {
         this.secretA = secretA;
 
         ByteBuffer buffer = ByteBuffer.allocate(16);
+        buffer.order(ByteOrder.BIG_ENDIAN);
         buffer.putInt(num);
         buffer.putInt(len);
         buffer.putInt(udpPort);
         buffer.putInt(secretA);
 
         payload = buffer.array();
-        payloadLen = 16;
+        payloadLen = buffer.position();
     }
 
     public A2ServerPayload(ByteBuffer buffer, int payloadLen) {
@@ -34,7 +36,6 @@ public class A2ServerPayload extends Payload {
         len = buffer.getInt();
         udpPort = buffer.getInt();
         secretA = buffer.getInt();
-        payload = buffer.array();
     }
 
     @Override

@@ -23,8 +23,8 @@ public class TCPClient extends AbstractClient {
     }
 
     @Override
-    public void sendPacket(byte[] packet, int length) throws IOException {
-        outputStream.write(packet, 0, length);
+    public void sendBytes(byte[] bytes, int length) throws IOException {
+        outputStream.write(bytes, 0, length);
         outputStream.flush();
     }
 
