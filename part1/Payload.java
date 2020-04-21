@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
  * Payload is an abstract implementation of the payload that lives inside
  * a Packet. Payload may contains different content depending on the design
  * from client or server. The underlying structures of Payload is just an
- * array of bytes. See @code{PayloadFactory} on how to create a new Payload
+ * array of bytes. See {@code PayloadFactory} on how to create a new Payload
  * of desired Payload type.
  */
 public abstract class Payload {
@@ -19,8 +19,8 @@ public abstract class Payload {
     }
 
     /**
-     * Initialize header from @code{buffer}. Every subclasses that implements
-     * a constructor with @code{buffer} and @{payloadLen} as paremeters must
+     * Initialize header from {@code buffer}. Every subclasses that implements
+     * a constructor with {@code buffer} and @{payloadLen} as paremeters must
      * call super(buffer, payloadLen)
      *
      * @param buffer the ByteBuffer that contains payload's content.
@@ -44,9 +44,9 @@ public abstract class Payload {
     }
 
     /**
-     * Build a payload from the given @code{buffer}. Different type of Payload
+     * Build a payload from the given {@code buffer}. Different type of Payload
      * has its own unique structures of the payload. Making this abstract
-     * will help @code{Packet} to build a payload generically.
+     * will help {@code Packet} to build a payload generically.
      *
      * @param buffer the ByteBuffer that contains payload's content. It requires
      *               that buffer.position() is at the beginning of payload content.

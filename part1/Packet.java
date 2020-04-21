@@ -7,7 +7,7 @@ import java.nio.ByteOrder;
 
 /**
  * Packet is an implementation of a packet which encapsulates a Header
- * and a Payload. @code{getLength} and @code{asBytes} ensure that the
+ * and a Payload. {@code getLength} and {@code asBytes} ensure that the
  * this Packet always return a representing of Payload in 4-byte aligned.
  */
 public class Packet {

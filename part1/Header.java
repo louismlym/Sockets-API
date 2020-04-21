@@ -32,7 +32,7 @@ public class Header {
     }
 
     /**
-     * Initialize header from @code{buffer}
+     * Initialize header from {@code buffer}
      *
      * @param buffer the ByteBuffer that contains header's content.
      *               It requires that buffer.position() is at the

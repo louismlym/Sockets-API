@@ -7,6 +7,12 @@ import java.net.DatagramPacket;
 import java.net.SocketException;
 import java.util.Random;
 
+/**
+ * ClientHandler handles a client that get connected to the server
+ * in {@code Server}. It runs under a thread which means multiple
+ * clients can be handle at a time.
+ * It follows STAGE a-d in the project specifications.
+ */
 public class ClientHandler implements Runnable {
     private static final int INIT_SECRET = 0;
     private static final int DEFAULT_TIMEOUT = 3000;
@@ -33,6 +39,8 @@ public class ClientHandler implements Runnable {
     public ClientHandler(UDPServer server, DatagramPacket inPacket) {
         this.server = server;
         this.inPacket = inPacket;
+
+        // pre-generating values to send to the client
         this.random = new Random();
         this.num = random.nextInt(16) + 10;
         this.len = random.nextInt(31) + 50;
@@ -55,6 +63,7 @@ public class ClientHandler implements Runnable {
             TCPServerSocket tcpSocket = serverB.accept();
             partC(tcpSocket);
             partD(tcpSocket);
+            serverB.close();
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         } catch (IllegalStateException ex) {
@@ -102,8 +111,13 @@ public class ClientHandler implements Runnable {
         Packet packetB1 = null;
 
         for (int i = 0; i < num; i++) {
-            // receive a Packet;
-            packetB1 = serverA.receivePacket(new PayloadFactory.B1ClientPayloadFactory(), DEFAULT_TIMEOUT);
+            // receive a Packet
+            try {
+                packetB1 = serverA.receivePacket(new PayloadFactory.B1ClientPayloadFactory(), DEFAULT_TIMEOUT);
+            } catch (Exception ex) {
+                serverA.close();
+                throw ex;
+            }
 
             // wrong pSecret
             if (packetB1.getHeader().pSecret != secretA) {
@@ -127,7 +141,7 @@ public class ClientHandler implements Runnable {
             }
         }
 
-        // part b2:
+        // part b2: sends a UDP packet containing tcp_port and secretB
         TCPServer serverB2;
 
         // find available port
@@ -146,12 +160,13 @@ public class ClientHandler implements Runnable {
         Header headerB2 = new Header(payloadB2.getLength(), secretA, (short) 2, studentId);
         Packet packetB2 = new Packet(headerB2, payloadB2);
         serverA.sendPacket(packetB2, packetB1.getAddress(), packetB1.getPort());
+        serverA.close();
         return serverB2;
     }
 
     private void partC(TCPServerSocket tcpSocket) throws IOException, IllegalStateException {
         print("=======================Part C=======================");
-        // step c2: sends num2, len2, secretC, c
+        // part c2: sends num2, len2, secretC, c
         Payload payloadC2 = new C2ServerPayload(num2, len2, secretC, c);
         Header headerC2 = new Header(payloadC2.getLength(), secretB, (short) 2, studentId);
         Packet packetC2 = new Packet(headerC2, payloadC2);
@@ -160,9 +175,15 @@ public class ClientHandler implements Runnable {
 
     private void partD(TCPServerSocket tcpSocket) throws IOException, IllegalStateException {
         print("=======================Part D=======================");
-        // step d1: receives num2 payloads, each payload of length len2 all containing byte c
+        // part d1: receives num2 payloads, each payload of length len2 all containing byte c
         for (int i = 0; i < num2; i++) {
-            Packet packetD1 = tcpSocket.receivePacket(new PayloadFactory.D1ClientPayloadFactory(), DEFAULT_TIMEOUT);
+            Packet packetD1;
+            try {
+                packetD1 = tcpSocket.receivePacket(new PayloadFactory.D1ClientPayloadFactory(), DEFAULT_TIMEOUT);
+            } catch (Exception ex) {
+                tcpSocket.close();
+                throw ex;
+            }
             D1ClientPayload payloadD1 = (D1ClientPayload) packetD1.getPayload();
             if (packetD1.getHeader().pSecret != secretC) {
                 throw new IllegalStateException("incorrect pSecret C");
@@ -172,11 +193,12 @@ public class ClientHandler implements Runnable {
             }
         }
 
-        // step d2: sends secretD
+        // part d2: sends secretD
         Payload payloadD2 = new D2ServerPayload(secretD);
-        Header headerD2 = new Header(payloadD2.getLength(), secretB, (short) 2, studentId);
+        Header headerD2 = new Header(payloadD2.getLength(), secretC, (short) 2, studentId);
         Packet packetD2 = new Packet(headerD2, payloadD2);
         tcpSocket.sendPacket(packetD2);
+        tcpSocket.close();
     }
 
     private void print(String message) {

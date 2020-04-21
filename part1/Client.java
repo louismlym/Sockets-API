@@ -7,6 +7,8 @@ public class Client {
 
     private static final String HOSTNAME = "attu2.cs.washington.edu";
     private static final String LOCALHOST = "localhost";
+    private static final short STEP = 1;
+    private static final short STUDENT_ID = 736;
 
     public static void main(String[] args) throws IOException {
         Packet packetA = partA();
@@ -27,7 +29,7 @@ public class Client {
         UDPClient client = new UDPClient(HOSTNAME, 12235);
 
         Payload payloadA1 = new A1ClientPayload("hello world");
-        Header headerA1 = new Header(payloadA1.getLength(), 0, (short) 1, (short) 736);
+        Header headerA1 = new Header(payloadA1.getLength(), 0, STEP, STUDENT_ID);
         Packet packetA1 = new Packet(headerA1, payloadA1);
 
         // part a1: sends a single UDP packet containing the string "hello world"
@@ -50,7 +52,7 @@ public class Client {
         //          acked_packet_id
         for (int packetId = 0; packetId < payloadA2.num; packetId++) {
             Payload payloadB1 = new B1ClientPayload(packetId, payloadA2.len);
-            Header headerB1 = new Header(payloadB1.getLength(), payloadA2.secretA, (short) 1, (short) 736);
+            Header headerB1 = new Header(payloadB1.getLength(), payloadA2.secretA, STEP, STUDENT_ID);
             Packet packetB1 = new Packet(headerB1, payloadB1);
 
             while (true) {
@@ -79,7 +81,7 @@ public class Client {
 
     private static Packet partC(Packet packetB, TCPClient client) throws IOException {
         System.out.println("=======================Part C=======================");
-        // part c2: receives a packet from the TCP server.
+        // part c2: receives a packet from the TCP server containing num2, len2, secretC, c
         Packet packetC2 = client.receivePacket(Header.SIZE + 16, new PayloadFactory.C2ServerPayloadFactory());
 
         return packetC2;
@@ -93,7 +95,7 @@ public class Client {
         //          to the server
         for (int i = 0; i < payloadC2.num2; i++) {
             Payload payloadD1 = new D1ClientPayload(payloadC2.c, payloadC2.len2);
-            Header headerD1 = new Header(payloadD1.getLength(), payloadC2.secretC, (short) 1, (short) 736);
+            Header headerD1 = new Header(payloadD1.getLength(), payloadC2.secretC, STEP, STUDENT_ID);
             Packet packetD1 = new Packet(headerD1, payloadD1);
 
             client.sendPacket(packetD1);
@@ -107,9 +109,9 @@ public class Client {
     private static void printSummary(Packet packetA, Packet packetB, Packet packetC, Packet packetD) {
         System.out.println("----------------------------------------------------");
         System.out.println("Summary of packets received from each part");
-        System.out.println("A: " + packetA.toString());
-        System.out.println("B: " + packetB.toString());
-        System.out.println("C: " + packetC.toString());
-        System.out.println("D: " + packetD.toString());
+        System.out.println("A: " + packetA);
+        System.out.println("B: " + packetB);
+        System.out.println("C: " + packetC);
+        System.out.println("D: " + packetD);
     }
 }

@@ -5,10 +5,10 @@
 
 ### Sequence of Server Secrets
 ```
-secretA = 59
-secretB = 38
-secretC = 205
-secretD = 21
+secretA = 66
+secretB = 42
+secretC = 201
+secretD = 51
 ```
 
 ### How to compile and run code?
