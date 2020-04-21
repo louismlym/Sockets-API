@@ -1,19 +1,11 @@
-## Part 1
+## Part 2
 ### Group Members
 - Milin Kodnongbua (milink)
 - Patsawee "Louis" Maliyam (maliyp)
 
-### Sequence of Server Secrets
-```
-secretA = 59
-secretB = 38
-secretC = 205
-secretD = 21
-```
-
 ### How to compile and run code?
 Under `sockets-api` directory, run the following:
 ```
-javac part1/Client.java
-java part1.Client
+javac part2/Server.java
+java part2.Server
 ```
