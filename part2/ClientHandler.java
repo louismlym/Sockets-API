@@ -78,9 +78,7 @@ public class ClientHandler implements Runnable {
         // part a1: parse "hello world" from inPacket
         Packet packetA1;
         packetA1 = new Packet(inPacket, new PayloadFactory.A1ClientPayloadFactory());
-        if (packetA1.getHeader().pSecret != INIT_SECRET) {
-            throw new IllegalStateException("incorrect initial pSecret");
-        }
+        checkHeader(packetA1.getHeader(), INIT_SECRET);
         this.studentId = packetA1.getHeader().studentId;
 
         // part a2: send num, len, udp_port, secretA to the client
@@ -119,18 +117,20 @@ public class ClientHandler implements Runnable {
                 throw ex;
             }
 
-            // wrong pSecret
-            if (packetB1.getHeader().pSecret != secretA) {
-                throw new IllegalStateException("incorrect pSecret A");
-            }
+            checkHeader(packetB1.getHeader(), secretA);
+
+            B1ClientPayload packetB1Payload = (B1ClientPayload)packetB1.getPayload();
 
             // wrong packetId
-            if (((B1ClientPayload) packetB1.getPayload()).packetId != i) {
+            if (packetB1Payload.packetId != i) {
                throw new IllegalStateException("incorrect packetId");
+            }
+            if (packetB1Payload.zeros.length != len) {
+              throw new IllegalStateException("incorrect len");
             }
 
             // randomly send an acknowledgement (ACK)
-            if (random.nextBoolean()) {
+            if (random.nextInt(100) > 20) {
                 Payload payloadB1 = new B1ServerPayload(i);
                 Header headerB1 = new Header(payloadB1.getLength(), secretA, (short) 2, studentId);
                 Packet packetB1Ack = new Packet(headerB1, payloadB1);
@@ -185,9 +185,7 @@ public class ClientHandler implements Runnable {
                 throw ex;
             }
             D1ClientPayload payloadD1 = (D1ClientPayload) packetD1.getPayload();
-            if (packetD1.getHeader().pSecret != secretC) {
-                throw new IllegalStateException("incorrect pSecret C");
-            }
+            checkHeader(packetD1.getHeader(), secretC);
             if (payloadD1.c != c || payloadD1.len2 != len2) {
                 throw new IllegalStateException("incorrect c or len2");
             }
@@ -199,6 +197,15 @@ public class ClientHandler implements Runnable {
         Packet packetD2 = new Packet(headerD2, payloadD2);
         tcpSocket.sendPacket(packetD2);
         tcpSocket.close();
+    }
+
+    private void checkHeader(Header header, int pSecret) {
+      if (header.pSecret != pSecret) {
+        throw new IllegalStateException("incorrect pSecret");
+      }
+      if (header.step != 1) {
+        throw new IllegalStateException("incorrect step");
+      }
     }
 
     private void print(String message) {

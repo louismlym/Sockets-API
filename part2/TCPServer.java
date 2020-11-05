@@ -19,6 +19,7 @@ public class TCPServer {
     public TCPServer(int listenPort) throws IOException {
         this.listenPort = listenPort;
         this.socket = new ServerSocket(listenPort);
+        this.socket.setSoTimeout(3000);
     }
 
     /**
